@@ -102,8 +102,22 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     """
     # BEGIN ASSIGN1_1
     # TODO
+    visited = set()
+    output = []
+    def dfs(variable,visited,output):
+        if variable in visited:
+            return
+        visited.add(variable)
+        for parent in variable.parents():
+            dfs(parent,visited,output)
+        output.append(variable)
+
+    dfs(variable,visited,output)
+    return output
     
-    raise NotImplementedError("Task Autodiff Not Implemented Yet")
+
+
+    # raise NotImplementedError("Task Autodiff Not Implemented Yet")
     # END ASSIGN1_1
 
 
@@ -120,8 +134,11 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     """
     # BEGIN ASSIGN1_1
     # TODO
-   
-    raise NotImplementedError("Task Autodiff Not Implemented Yet")
+    topo_sort = topological_sort(variable)
+    for var in reversed(topo_sort):
+        for parent,d_out in var.chain_rule(deriv): #Messed this up, its a list of tuples up until that point
+            parent.accumulate_derivative(d_out)
+    # raise NotImplementedError("Task Autodiff Not Implemented Yet")
     # END ASSIGN1_1
 
 
